@@ -20,7 +20,7 @@ const Conversation = () => {
     >
      <Header/>
       <Box sx={{ flexGrow: 1 }} height="83.5%">
-        <Message />
+        <Message menu={true}/>
       </Box>
       <Footer />
     </Box>
