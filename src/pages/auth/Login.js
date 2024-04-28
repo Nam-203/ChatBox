@@ -11,7 +11,7 @@ const Login = () => {
         <Typography variant="h4"> Login to App</Typography>
         <Stack spacing={0.5} direction={"row"}>
           <Typography variant="body2">New user</Typography>
-          <Link to="auth/register" component={RouterLink} variant="subtitle2">
+          <Link  component={RouterLink} to="/auth/register" variant="subtitle2">
             CreateAccount
           </Link>
         </Stack>
