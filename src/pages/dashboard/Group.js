@@ -8,15 +8,20 @@ import {
   Divider,
 } from "@mui/material";
 import { MagnifyingGlass, Plus } from "phosphor-react";
-import React from "react";
+import React, { useState } from "react";
 import Search from "./../../components/Search/Search";
 import SearchIconWrapper from "./../../components/Search/SearchIconWrapper";
 import StyledInputBase from "./../../components/Search/StyledInputBase";
 import { SimpleBarStyle } from "../../components/Scrollbar";
 import { ChatList } from "../../data";
 import ChatElement from "../../components/ChatElement";
+import CreateGroup from "../../sections/main/CreateGroup";
 
 const Group = () => {
+  const [openDialog, setOpenDialog] = useState(false);
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
   const theme = useTheme();
   return (
     <>
@@ -56,7 +61,7 @@ const Group = () => {
               <Typography variant="subtitle2" component={Link}>
                 Create New Group
               </Typography>
-              <IconButton>
+              <IconButton onClick={()=>{setOpenDialog(true)}}>
                 <Plus style={{ color: theme.palette.primary.main }} />
               </IconButton>
             </Stack>
@@ -88,7 +93,7 @@ const Group = () => {
                 </Stack>
                 <Stack spacing={2.4}>
                   <Typography  p={1}> All Group</Typography>
-                  {/* chtaList */}
+                  {/* chtaList right */}
                   {ChatList.filter((el) => !el.pinned).map((el) => {
                     return <ChatElement {...el} />;
                   })}
@@ -98,6 +103,9 @@ const Group = () => {
           </Stack>
         </Box>
         {/* Right */}
+        {openDialog && 
+        <CreateGroup open={openDialog} handleClose={handleCloseDialog} />
+      }
       </Stack>
     </>
   );

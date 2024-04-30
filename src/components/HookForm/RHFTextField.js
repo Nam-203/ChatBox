@@ -4,6 +4,7 @@ import { TextField } from "@mui/material";
 import React from "react";
 RHFTextField.ropTypes ={
     name:PropTypes.string,
+    label :PropTypes.string,
     helperText :PropTypes.string
 }
 export default function RHFTextField({ name, helperText, ...other }) {

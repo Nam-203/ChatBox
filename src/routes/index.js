@@ -36,6 +36,7 @@ export default function Router() {
         { element: <Navigate to={DEFAULT_PATH} replace />, index: true },
         { path: "/app", element: <GeneralApp /> },
         { path: "/group", element: <GroupPage /> },
+        { path: "/call", element: <CallPage /> },
         { path: "/404", element: <Page404 /> },
         { path: "*", element: <Navigate to="/404" replace /> },
       ],
@@ -57,3 +58,4 @@ const NewPasswordPage = Loadable(
   lazy(() => import("../pages/auth/NewPassword.js"))
 );
 const GroupPage = Loadable(lazy(() => import("../pages/dashboard/Group.js")));
+const CallPage = Loadable(lazy(() => import("../pages/dashboard/Call.js")));
