@@ -8,7 +8,6 @@ import {
   User,
   Users,
 } from "phosphor-react";
-
 const Profile_Menu = [
   {
     title: "Profile",
