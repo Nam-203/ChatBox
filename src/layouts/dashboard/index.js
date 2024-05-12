@@ -9,14 +9,15 @@ import { faker } from "@faker-js/faker";
 import useSettings from "../../hooks/useSettings";
 import AntSwitch from "../../components/AntSwitch";
 import SideBar from "./SideBar";
+import { useSelector } from "react-redux";
 
 const Container = styled(Box)({
   display: "flex",
   height: "100%",
 });
-const isAuthenticated =true
 const DashboardLayout = () => {
-  if (!isAuthenticated) {
+  const {isLoggedIn}= useSelector((state)=> state.auth)
+  if (!isLoggedIn) {
     return <Navigate to="/auth/login"/>
     
   }

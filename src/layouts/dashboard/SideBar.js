@@ -18,6 +18,8 @@ import { faker } from "@faker-js/faker";
 import useSettings from "../../hooks/useSettings";
 import AntSwitch from "../../components/AntSwitch";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logOutUser, sigOut } from "../../redux/slices/auth";
 
 const Container = styled(Box)({
   display: "flex",
@@ -45,23 +47,22 @@ const getPath = (index) => {
       break;
   }
 };
-const getMenuPath=(index)=>{
+const getMenuPath = (index) => {
   switch (index) {
     case 0:
-      
       return "/profile";
-      case 1:
-        return "/settings";
-      case 2:
-        // TODO Update Token&set is ahth
-        return "/auth/login ";
-  
+    case 1:
+      return "/settings";
+    case 2:
+      // TODO Update Token&set is ahth
+      return "/auth/login ";
+
     default:
       break;
   }
-
-}
+};
 const SideBar = () => {
+  const dispatch = useDispatch();
   const theme = useTheme();
   const navigate = useNavigate();
   const [selector, setSelector] = useState(0);
@@ -166,7 +167,7 @@ const SideBar = () => {
             ) : (
               <IconButton
                 onClick={() => {
-                  navigate(getPath(3))
+                  navigate(getPath(3));
                   setSelector(3);
                 }}
                 sx={{
@@ -211,15 +212,22 @@ const SideBar = () => {
             }}
           >
             <Stack spacing={1} px={1}>
-              {Profile_Menu.map((el,idx) => (
-                <MenuItem onClick={()=>{
-                  handleClick()
-                  navigate(getMenuPath(idx))
-                }}>
-                  <Stack
-                  onClick ={()=>{
-                    navigate(getMenuPath(idx))
+              {Profile_Menu.map((el, idx) => (
+                <MenuItem
+                  onClick={() => {
+                    handleClick();
+
+                    navigate(getMenuPath(idx));
                   }}
+                >
+                  <Stack
+                    onClick={() => {
+                      navigate(getMenuPath(idx));
+                      
+                    if (idx === 2) {
+                      dispatch(logOutUser());
+                    }
+                    }}
                     sx={{ width: 100 }}
                     direction="row"
                     alignItems={"center"}

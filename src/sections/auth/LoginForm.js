@@ -18,6 +18,7 @@ import { Eye, EyeSlash } from "phosphor-react";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link as RouterLink } from "react-router-dom";
+import { loginUser } from './../../redux/slices/auth';
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -36,7 +37,7 @@ const LoginForm = () => {
     password: "demo1234",
   };
   const methods = useForm({
-    resolver: yupResolver(LoginForm),
+    resolver: yupResolver(LoginSchema),
     defaultValues,
   });
 
@@ -49,6 +50,7 @@ const LoginForm = () => {
 
   const onSubmit = async (data) => {
     try {
+      dispatch(loginUser(data))
     } catch (error) {
       console.log(error);
       reset();

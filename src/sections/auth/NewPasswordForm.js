@@ -7,15 +7,17 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Stack, IconButton, InputAdornment, Button } from '@mui/material';
 // components
 import { Eye, EyeSlash } from 'phosphor-react';
-import FormProvider from "../../components/HookForm/FormProvider";
-import RHFTextField from "../../components/HookForm/RHFTextField";
+import { useSearchParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { NewPassword } from '../../redux/slices/auth';
+import FormProvider from '../../components/HookForm/FormProvider';
+import RHFTextField from '../../components/HookForm/RHFTextField';
 
-
-
-
+// ----------------------------------------------------------------------
 
 export default function NewPasswordForm() {
- 
+  const dispatch = useDispatch();
+  const [queryParameters] = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
 
   const VerifyCodeSchema = Yup.object().shape({
@@ -45,7 +47,8 @@ export default function NewPasswordForm() {
 
   const onSubmit = async (data) => {
     try {
-    //   Send API Requests
+    //   Send API Request
+    dispatch(NewPassword({...data, token: queryParameters.get('token')}));
     } catch (error) {
       console.error(error);
     }
