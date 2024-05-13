@@ -1,21 +1,27 @@
-import React, { useState } from "react";
-import * as Yup from "yup";
 
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Link as RouterLink } from "react-router-dom";
+import { useState } from "react";
+import * as Yup from "yup";
+// form
 import { useForm } from "react-hook-form";
-import FormProvider from "./../../components/HookForm/FormProvider";
-import { Alert, Button, IconButton, InputAdornment, Stack } from "@mui/material";
-import RHFTextField from "./../../components/HookForm/RHFTextField";
+import { yupResolver } from "@hookform/resolvers/yup";
+// @mui
+import { Link, Stack, Alert, IconButton, InputAdornment, Button } from "@mui/material";
+// components
 import { Eye, EyeSlash } from "phosphor-react";
-import AuthSocical from "./AuthSocical";
-const RegisterForm = () => {
+import { useDispatch } from "react-redux";
+import { Register } from "../../redux/slices/auth";
+import FormProvider from './../../components/HookForm/FormProvider';
+import RHFTextField from "../../components/HookForm/RHFTextField";
+
+// ----------------------------------------------------------------------
+
+export default function AuthRegisterForm() {
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
-    firstName: Yup.string().required("first name is required"),
-    lastName: Yup.string().required("Last name is required"),
-
+    firstName: Yup.string().required("First name required"),
+    lastName: Yup.string().required("Last name required"),
     email: Yup.string()
       .required("Email is required")
       .email("Email must be a valid email address"),
@@ -25,11 +31,12 @@ const RegisterForm = () => {
   const defaultValues = {
     firstName: "",
     lastName: "",
-    email: "demo@dev.com",
+    email: "demo@tawk.com",
     password: "demo1234",
   };
+
   const methods = useForm({
-    resolver: yupResolver(RegisterForm),
+    resolver: yupResolver(RegisterSchema),
     defaultValues,
   });
 
@@ -37,13 +44,15 @@ const RegisterForm = () => {
     reset,
     setError,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
+    formState: { errors },
   } = methods;
 
   const onSubmit = async (data) => {
     try {
+      // submit data to backend
+      dispatch(Register(data));
     } catch (error) {
-      console.log(error);
+      console.error(error);
       reset();
       setError("afterSubmit", {
         ...error,
@@ -51,19 +60,23 @@ const RegisterForm = () => {
       });
     }
   };
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={3}>
+      <Stack spacing={3} mb={4}>
         {!!errors.afterSubmit && (
           <Alert severity="error">{errors.afterSubmit.message}</Alert>
         )}
-        <Stack direction={{ sx: "column", sm: "row" }} spacing={2}>
-          <RHFTextField name="firstName" label="First Name" />
-          <RHFTextField name="lastName" label="Last Name" />
+
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+          <RHFTextField name="firstName" label="First name" />
+          <RHFTextField name="lastName" label="Last name" />
         </Stack>
-        <RHFTextField name="Email" label="Email" />
+
+        <RHFTextField name="email" label="Email address" />
+
         <RHFTextField
-          name="Password"
+          name="password"
           label="Password"
           type={showPassword ? "text" : "password"}
           InputProps={{
@@ -79,28 +92,27 @@ const RegisterForm = () => {
             ),
           }}
         />
-        <Button
+      </Stack>
+
+      <Button
         fullWidth
         color="inherit"
         size="large"
         type="submit"
-        variant="container"
+        variant="contained"
         sx={{
           bgcolor: "text.primary",
           color: (theme) =>
             theme.palette.mode === "light" ? "common.white" : "grey.800",
-          "&hover": {
+          "&:hover": {
             bgcolor: "text.primary",
             color: (theme) =>
               theme.palette.mode === "light" ? "common.white" : "grey.800",
           },
         }}
-      >Register</Button>
-      <AuthSocical/>
-      </Stack>
-      
+      >
+        Create Account
+      </Button>
     </FormProvider>
   );
-};
-
-export default RegisterForm;
+}
