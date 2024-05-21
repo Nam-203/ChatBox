@@ -18,7 +18,8 @@ const ProfileForm = () => {
     about: Yup.string().required("About is required"),
     avatar: Yup.string().required("Avatar is required").nullable(true),
   });
-
+ 
+  
   const defaultValues = {
     name: "",
     about: "",
