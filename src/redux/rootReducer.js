@@ -1,6 +1,8 @@
 import { combineReducers } from "redux";
-import  appReducer  from "./slices/app";
 import storage from "redux-persist/lib/storage";
+import authReducer from "./slices/auth";
+import appReducer from "./slices/app"
+import conversationReducer from "./slices/conversation";
 const rootPersistConfig = {
   key: "root",
   storage,
@@ -9,6 +11,8 @@ const rootPersistConfig = {
   //blacklist
 };
 const rootReducer = combineReducers({
-  app: appReducer,
+  app:appReducer ,
+  auth: authReducer,
+  conversation: conversationReducer
 });
 export { rootPersistConfig, rootReducer };
