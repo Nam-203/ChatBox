@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "../../utils/axios";
+import { openSnackBar } from "./app";
 
 const initialState = {
   isLoggedIn: false,
@@ -54,21 +55,30 @@ export function loginUser(formVlues) {
         }
       )
       .then(function (response) {
-        console.log(response);
+        console.log("res",response);
+       
         dispatch(
           slice.actions.logIn({ isLoggedIn: true, token: response.data.token })
+          
         );
+        dispatch(openSnackBar({severity:"success",message:response.data.message})
+        );
+        window.localStorage.setItem("user_id",response.data.user_id)
       })
       .catch(function (err) {
         console.log(err);
-      }).finally(()=>{
-        if (getState().auth.isLoggedIn===true) {
-          window.location.href = '/';
-  }});
+        dispatch(openSnackBar({severity:"error",message:err.message }))
+       })
+      .finally(() => {
+        if (getState().auth.isLoggedIn === true) {
+          window.location.href = "/";
+        }
+      });
   };
 }
 export function logOutUser(user) {
   return async (dispatch, getState) => {
+    window.localStorage.removeItem("user_id")
     dispatch(slice.actions.sigOut());
   };
 }
@@ -169,13 +179,15 @@ export function VerifyEmail(formVlues) {
       )
       .then(function (response) {
         console.log(response);
+        window.localStorage.setItem("user_id",response.data.user_id)
       })
       .catch(function (err) {
         console.log(err);
-      }).finally(() => {
+      })
+      .finally(() => {
         if (!getState().auth.error) {
           window.location.href = "/auth/login";
         }
-      });;
+      });
   };
 }

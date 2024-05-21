@@ -3,8 +3,10 @@ import { Box, Button, Container, Link, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { Link as RouterLink } from "react-router-dom";
 import logo3 from "../assets/Images/logo3.gif";
+import { useSelector } from "react-redux";
 
 const Page404 = () => {
+  const user_id = useSelector((state)=>state.auth)
   return (
     <>
       <Box
@@ -23,9 +25,12 @@ const Page404 = () => {
               <Typography variant="h6">
                 The page you’re looking for doesn’t exist.
               </Typography>{" "}
-              <Link to="/auth/Login" component={RouterLink} variant="subtitle2">
+              {user_id ? <Link to="/" component={RouterLink} variant="subtitle2">
                 <Button sx={{mt: 5}} variant="contained">Back Home</Button>
-              </Link>
+              </Link> : <Link to="/auth/login" component={RouterLink} variant="subtitle2">
+                <Button sx={{mt: 5}} variant="contained">Back Home</Button>
+              </Link>}
+             
             </Grid>
             <Grid item xs={6}>
               <img src={logo3} alt="" width={500} height={450} />

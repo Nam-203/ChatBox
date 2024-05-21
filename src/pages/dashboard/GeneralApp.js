@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from "react";
 
-import { Box, Stack, useTheme } from "@mui/material";
+import { Box, Stack, Typography, useTheme } from "@mui/material";
 import Chats from "./Chats";
 import ChatHeader from "../../components/Chat/Header";
 import Footer from "./../../components/Chat/Footer";
@@ -10,10 +10,11 @@ import Contact from "../../components/Contact";
 import { useSelector } from "react-redux";
 import ShareMessages from "../../components/ShareMessages";
 import StarredMessages from "../../components/StarredMessages";
-
+import NochatSVG from "../../assets/Illustration/NoChat";
 const GeneralApp = () => {
   const theme = useTheme();
-  const { sidebar } = useSelector((store) => store.app);
+  const { sidebar, chat_type,room_id } = useSelector((store) => store.app);
+  console.log(room_id+ "rommmm");
 
   return (
     <Stack direction={"row"} sx={{ width: "100%" }}>
@@ -28,7 +29,16 @@ const GeneralApp = () => {
               : theme.palette.background.paper,
         }}
       >
-        <Conversation />
+        {room_id !== null && chat_type === "vietnamvidual" ? <Conversation /> :
+        <Stack spacing={2} sx={{height:"100%", width:"100%"}} alignItems={"center"} justifyContent={"center"}>
+          <NochatSVG/>
+          <Typography>
+            Select a conversation or start new one
+          </Typography>
+
+        </Stack>
+        }
+       
       </Box>
       {sidebar.open &&
         (() => {
@@ -36,7 +46,6 @@ const GeneralApp = () => {
             case "CONTACT":
               return <Contact />;
             case "STARRED":
-
               return <StarredMessages />;
             case "SHARED":
               return <ShareMessages/>

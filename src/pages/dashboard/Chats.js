@@ -7,20 +7,43 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { ArchiveBox, CircleDashed, MagnifyingGlass } from "phosphor-react";
-import React from "react";
+import { ArchiveBox, CircleDashed, MagnifyingGlass, User, Users } from "phosphor-react";
+import React, { useEffect, useState } from "react";
 import { ChatList } from "../../data";
 import { SimpleBarStyle } from "../../components/Scrollbar";
 import Search from "../../components/Search/Search";
 import SearchIconWrapper from "../../components/Search/SearchIconWrapper";
 import StyledInputBase from "../../components/Search/StyledInputBase";
 import ChatElement from "../../components/ChatElement";
-
+import Friends from "../../sections/main/Friends";
+import { socket } from "../../socket";
+import { useSelector ,useDispatch } from 'react-redux';
+import { FetchDirectConversations } from "../../redux/slices/conversation";
 
 const Chats = () => {
+  const user_id = localStorage.getItem("user_id");
+  const dispatch = useDispatch();
+
+  const [openDialog , setOpenDialog] = useState(false);
   const theme = useTheme();
+  useEffect(() => {
+    socket.emit("get_direct_conversations", { user_id }, (data) => {
+      // dispatch action
+      dispatch(FetchDirectConversations({ conversations: data }));
+    });
+  }, []);
+
+  const {conversations} = useSelector((state)=>state.conversation.direct_chat)
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  }
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  }
+  
   return (
-    <Box
+    <>
+     <Box
       sx={{
         position: "relative",
         width: 320,
@@ -39,9 +62,18 @@ const Chats = () => {
           justifyContent={"space-between"}
         >
           <Typography variant="h5">chats</Typography>
+          <Stack direction={"row"} alignItems={"center"} spacing={1}>
+          <IconButton onClick={()=>{
+            handleOpenDialog()
+
+          }}>
+            <Users />
+          </IconButton>
           <IconButton>
             <CircleDashed />
           </IconButton>
+          </Stack>
+         
         </Stack>
         <Stack sx={{ width: "100%" }}>
           <Search>
@@ -87,19 +119,19 @@ const Chats = () => {
             }}
           >
            <SimpleBarStyle timeout={500} clickOnTrack={false}  >
-           <Stack spacing={2.4}>
+           {/* <Stack spacing={2.4}>
               <Typography variant="subtitle2" sx={{ color: "#676767" }}>
                 Pinned
               </Typography>
-              {ChatList.filter((el) => el.pinned).map((el) => {
-                return <ChatElement {...el} />;
+              {conversations.filter((el) => el.pinned).map((el,index) => {
+                return <ChatElement key={index} {...el} />;
               })}
-            </Stack>
+            </Stack> */}
               <Stack spacing={2.4}>
                 <Typography p={1} variant="subtitle2" sx={{ color: "#676767" }}>
                   All Chats
                 </Typography>
-                {ChatList.filter((el) => !el.pinned).map((el) => {
+                {conversations.filter((el) => !el.pinned).map((el) => {
                   return <ChatElement {...el} />;
                 })}
               </Stack>
@@ -110,6 +142,9 @@ const Chats = () => {
         
       </Stack>
     </Box>
+    {openDialog && <Friends open={openDialog} handleClose={handleCloseDialog}/>}
+    </>
+   
   );
 };
 

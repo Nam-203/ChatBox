@@ -1,11 +1,29 @@
 import { faker } from "@faker-js/faker";
 import { Avatar, Badge, Box, Stack, Typography, useTheme } from "@mui/material";
 import StyledBadge from "./StyledBage";
+import { useDispatch, useSelector } from "react-redux";
+import { SelectConversation } from "../redux/slices/app";
 
-const ChatElement = (props) => {
+const   ChatElement = ({id,online, name , msg ,time, unread,message}) => {
     const theme = useTheme();
+    const dispatch = useDispatch()
+    const {room_id} = useSelector((state) => state.app);
+    const selectedChatId = room_id?.toString();
+  
+    let isSelected = +selectedChatId === id;
+  
+    if (!selectedChatId) {
+      isSelected = false;
+    }
+    const handleChatClick = () => {
+      dispatch(SelectConversation({room_id: id}));
+      window.location.reload();
+     
+    };
+   
     return (
       <Box
+      onClick={handleChatClick}
         sx={{
           width: "100%",
           borderRadius: 1,
@@ -22,7 +40,7 @@ const ChatElement = (props) => {
           justifyContent={"space-between"}
         >
           <Stack direction={"row"} spacing={2}>
-            {props.online ? (
+            {online ? (
               <StyledBadge
                 overlap="circular"
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -35,15 +53,15 @@ const ChatElement = (props) => {
             )}
   
             <Stack spacing={0.3}>
-              <Typography variant="subtitle2">{props.name}</Typography>
-              <Typography variant="caption2">{props.msg}</Typography>
+              <Typography variant="subtitle2">{name}</Typography>
+              <Typography variant="caption2">{message}</Typography>
             </Stack>
           </Stack>
           <Stack spacing={2} alignItems={"center"}>
             <Typography sx={{ fontWeight: 600 }} variant= "caption" >
-              {props.time}
+              {time}
             </Typography>
-            <Badge color="primary" badgeContent={props.unread}></Badge>
+            <Badge color="primary" badgeContent={unread}></Badge>
           </Stack>
         </Stack>
       </Box>

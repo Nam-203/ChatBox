@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Alert, Button, Stack } from "@mui/material";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { UpdateUserProfile } from "../../redux/slices/app";
 const ProfileForm = () => {
   const dispatch = useDispatch();
   const [file, setFile] = useState();
@@ -40,10 +41,15 @@ const ProfileForm = () => {
 
   const values = watch();
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data) => { 
+    console.log(data);
     try {
-      //   Send API request
-      console.log("DATA", data);
+      dispatch(
+        UpdateUserProfile({
+          firstName: data?.firstName,
+          about: data?.about,
+          avatar: file,
+        }))
     } catch (error) {
       console.error(error);
       reset();
@@ -74,9 +80,7 @@ const ProfileForm = () => {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={4}>
       <Stack spacing={4}>
-        {!!errors.afterSubmit && (
-          <Alert severity="error">{errors.afterSubmit.message}</Alert>
-        )}
+
 
         <RHFTextField
           helperText={"This name is visible to your contacts"}
